@@ -14,7 +14,7 @@ public class encrypt {
 
     public static SecretKey generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
-        keyGen.init(128); // for example, you can use 128, 192, or 256 for AES
+        keyGen.init(128);
         return keyGen.generateKey();
     }
 
@@ -53,10 +53,9 @@ public class encrypt {
 
     public static void main(String inputFile, String encryptedFile) {
         try {
-            // Generate or load a key
+            // Generate a key
             SecretKey secretKey = generateKey();
 
-            // For demonstration, let's encode the key in Base64 to easily print or store
             String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
             System.out.println("Encryption Key (Base64 encoded): " + encodedKey);
 
