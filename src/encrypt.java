@@ -61,6 +61,7 @@ public class encrypt {
 
             encryptFile(inputFile, encryptedFile, secretKey);
             System.out.println("File encrypted successfully.");
+            app.result=true;
             String sysName = System.getProperty("user.name");
             File f = new File(inputFile);
             String basePath = deviceInfo.basePath;
