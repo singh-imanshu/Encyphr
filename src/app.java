@@ -43,6 +43,12 @@ public class app implements ActionListener {
         appFrame.setResizable(false);
         appFrame.setVisible(true);
 
+        label = new JLabel("To decrypt a file, click on it from the left menu.");
+        label.setBounds(400,400,50,25);
+        label1 = new JLabel("Please note that the list does not change in real time. I am still trying to figure it out.");
+        label1.setBounds(400,430,50,25);
+        appPanel.add(label);
+        appPanel.add(label1);
 
         jListManager();
     }
