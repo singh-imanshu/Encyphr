@@ -8,15 +8,17 @@ public class app implements ActionListener {
     private static JFrame appFrame;
     private static JPanel appPanel;
     private static JDialog fileClickedDialog,aboutDialog;
-    private static JButton encryptionButton, decryptionButton, openButton;
+    private static JButton encryptionButton, decryptionButton, openButton,closeButton;
     private static JFileChooser fileChooser;
     private static JMenu appMenu;
     private static JMenuBar appMenuBar;
     private static JList<String> passList;
     private static JScrollPane scrollPane;
+    private static JLabel label,label1;
     static ArrayList<String> fileData;
     static ArrayList<String> pathData;
     static ArrayList<String> cryptData;
+    static boolean result;
     static int selectedIndex;
 
     public static void main() throws Exception {
@@ -49,7 +51,6 @@ public class app implements ActionListener {
         label1.setBounds(400,430,50,25);
         appPanel.add(label);
         appPanel.add(label1);
-
         jListManager();
     }
 
@@ -139,6 +140,17 @@ public class app implements ActionListener {
                 String encryptedFilePath = file + ".encp";
                 encrypt cry = new encrypt();
                 cry.main(fileChooser.getSelectedFile().getAbsolutePath(), encryptedFilePath);
+                if (result){
+                    fileClickedDialog = new JDialog(appFrame, "Operation Successful!", true);
+                    fileClickedDialog.setLayout(new FlowLayout());
+                    closeButton = new JButton("Close");
+                    fileClickedDialog.add(closeButton);
+                    closeButton.addActionListener(new app());
+                    fileClickedDialog.setSize(300, 300);
+                    fileClickedDialog.setLocationRelativeTo(appFrame);
+                    fileClickedDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    fileClickedDialog.setVisible(true);
+                }
             }
         }
         if (e.getSource() == decryptionButton) {
@@ -160,7 +172,6 @@ public class app implements ActionListener {
             fileClickedDialog.setLocationRelativeTo(appFrame);
             fileClickedDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             fileClickedDialog.setVisible(true);
-
         }
         if (e.getSource() == openButton) {
             System.out.println("The user wishes to open the file after decryption.");
@@ -181,6 +192,9 @@ public class app implements ActionListener {
             aboutDialog.setLocationRelativeTo(appFrame);
             aboutDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             aboutDialog.setVisible(true);
+        }
+        if(e.getSource()==closeButton){
+            fileClickedDialog.dispose();
         }
     }
 }
