@@ -8,7 +8,7 @@ public class app implements ActionListener {
     private static JFrame appFrame;
     private static JPanel appPanel;
     private static JDialog fileClickedDialog,aboutDialog;
-    private static JButton encryptionButton, decryptionButton, openButton,closeButton;
+    private static JButton encryptionButton, decryptionButton, openButton, closeButton;
     private static JFileChooser fileChooser;
     private static JMenu appMenu;
     private static JMenuBar appMenuBar;
@@ -23,7 +23,7 @@ public class app implements ActionListener {
 
     public static void main() throws Exception {
         //basic outline of the JFrame
-        appFrame = new JFrame("Encyphr- home");
+        appFrame = new JFrame("Encyphr - home");
         appPanel = new JPanel();
         appFrame.setSize(800, 800);
         encryptionButton = new JButton("Click here to encrypt a file ");
@@ -40,31 +40,29 @@ public class app implements ActionListener {
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         appPanel.add(encryptionButton);
         appFrame.setLayout(new BorderLayout());
-        encryptionButton.setBounds(375, 400, 50, 20);
+        encryptionButton.setBounds(150, 25, 200, 20);
+
+
+        label = new JLabel("To decrypt a file, click on it from the left menu.");
+        label.setBounds(130,400,500,25);
+        label1 = new JLabel("Please note that the list does not change in real time. I am still trying to figure it out.");
+        label1.setBounds(50,430,500,25);
+        appPanel.setLayout(null);
+        appPanel.add(label);
+        appPanel.add(label1);
         appFrame.add(appPanel);
         appFrame.setResizable(false);
         appFrame.setVisible(true);
-
-        label = new JLabel("To decrypt a file, click on it from the left menu.");
-        label.setBounds(400,400,50,25);
-        label1 = new JLabel("Please note that the list does not change in real time. I am still trying to figure it out.");
-        label1.setBounds(400,430,50,25);
-        appPanel.add(label);
-        appPanel.add(label1);
-        jListManager();
+        arrayListManager();
     }
 
-    public static void jListManager() throws Exception {
-        System.out.println("jListManager invoked");
+    public static void arrayListManager() throws Exception {
 
         fileData = new ArrayList<>();
         cryptData = new ArrayList<>();
         pathData = new ArrayList<>();
-        fileData.clear();
-        cryptData.clear();
-        pathData.clear();
         String basePath = deviceInfo.basePath;
-        BufferedReader reader = new BufferedReader(new FileReader(basePath + "\\encyphrlogs.encp"));
+        BufferedReader reader = new BufferedReader(new FileReader(basePath + "\\encyphrlogs.eph"));
         String currentLine;
         int x = 0;
         while ((currentLine = reader.readLine()) != null) {
@@ -78,12 +76,15 @@ public class app implements ActionListener {
                 x++;
             }
         }
+        jListManager();
+    }
+
+    public static void jListManager() throws Exception {
         //finalising list contents and position
         String[] dataArray = fileData.toArray(new String[0]);
         passList = new JList<>(dataArray);
         scrollPane = new JScrollPane(passList);
         appFrame.add(scrollPane, BorderLayout.WEST);
-
         //adding functionality to list elements
         passList.addMouseListener(new MouseListener() {
             @Override
@@ -136,7 +137,6 @@ public class app implements ActionListener {
             int response = fileChooser.showOpenDialog(null);
             if (response == JFileChooser.APPROVE_OPTION) {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                System.out.println(file);
                 String encryptedFilePath = file + ".encp";
                 encrypt cry = new encrypt();
                 cry.main(fileChooser.getSelectedFile().getAbsolutePath(), encryptedFilePath);
@@ -156,7 +156,6 @@ public class app implements ActionListener {
         if (e.getSource() == decryptionButton) {
             fileClickedDialog.dispose();
             decrypt dc = new decrypt();
-            System.out.println(cryptData.get(selectedIndex));
             try {
                 dc.main(cryptData.get(selectedIndex), pathData.get(selectedIndex) + ".encp", pathData, cryptData);
             } catch (Exception ex) {
@@ -174,7 +173,6 @@ public class app implements ActionListener {
             fileClickedDialog.setVisible(true);
         }
         if (e.getSource() == openButton) {
-            System.out.println("The user wishes to open the file after decryption.");
             String filePath = decrypt.decryptedFilePath;
             File file = new File(filePath);
             try {
@@ -185,7 +183,6 @@ public class app implements ActionListener {
             }
         }
         if(e.getSource()==appMenu){
-            System.out.println("check");
             aboutDialog = new JDialog(appFrame,"ABOUT",true);
             aboutDialog.setLayout(new FlowLayout());
             aboutDialog.setSize(300,300);
