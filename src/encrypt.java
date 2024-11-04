@@ -14,7 +14,7 @@ public class encrypt {
 
     public static SecretKey generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
-        keyGen.init(128);
+        keyGen.init(deviceInfo.algodata);
         return keyGen.generateKey();
     }
 
@@ -53,11 +53,10 @@ public class encrypt {
 
     public static void main(String inputFile, String encryptedFile) {
         try {
-            // Generate a key
+            // Generate or load a key
             SecretKey secretKey = generateKey();
 
             String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-            System.out.println("Encryption Key (Base64 encoded): " + encodedKey);
 
             encryptFile(inputFile, encryptedFile, secretKey);
             System.out.println("File encrypted successfully.");
@@ -65,18 +64,12 @@ public class encrypt {
             String sysName = System.getProperty("user.name");
             File f = new File(inputFile);
             String basePath = deviceInfo.basePath;
-            FileWriter fw = new FileWriter(basePath+"\\encyphrlogs.encp",true);
+            FileWriter fw = new FileWriter(basePath+"\\encyphrlogs.eph",true);
             fw.write(inputFile+"\n");
             fw.write(encodedKey+"\n");
             fw.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        app appInstance = new app();
-        try {
-            appInstance.jListManager();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }
