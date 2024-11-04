@@ -60,23 +60,30 @@ public class decrypt {
         fileDeletion(key,filePath);
     }
     public static void fileDeletion(String keyB64, String filePath) throws Exception {
-            if(pathData.contains(filePath)&&cryptData.contains(keyB64)){
-                int idx1 = pathData.indexOf(filePath);
-                int idx2 = cryptData.indexOf(keyB64);
-                pathData.remove(idx1);
-                cryptData.remove(idx2);
+
+        filePath = filePath.substring(0,filePath.length() - 5);
+        boolean found = false;
+        for (int i = 0; i < pathData.size(); i++) {
+            if (pathData.get(i).equals(filePath) && cryptData.get(i).equals(keyB64)) {
+                pathData.remove(i);
+                cryptData.remove(i);
+                found = true;
+                break;
             }
-            String basePath = deviceInfo.basePath+"\\encyphrlogs.encp";
-            File file = new File(basePath);
+        }
+
+        if (found==true) {
+            String basePath = deviceInfo.basePath + "\\encyphrlogs.eph";
+            fileClearing fc = new fileClearing();
+            fc.main(basePath);
             FileWriter fw = new FileWriter(basePath);
-            file.delete();
-            file.createNewFile();
-            System.out.println("encyphrlogs.encp created after successful deletion of .encp file");
-            for(int i=0;i<pathData.size();i++){
-                fw.write(pathData.get(i)+"\n");
-                fw.write(cryptData.get(i)+"\n");
+            for (int i = 0; i < pathData.size(); i++) {
+                fw.write(pathData.get(i) + "\n");
+                fw.write(cryptData.get(i) + "\n");
             }
-            app appInstance = new app();
-            appInstance.jListManager();
+            fw.close();
+        } else {
+            System.out.println("Could not find matching filePath and keyB64 in lists.");
         }
     }
+}
