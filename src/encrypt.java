@@ -12,12 +12,14 @@ public class encrypt {
     private static final String CIPHER_MODE = "AES/CBC/PKCS5Padding";
     private static final int BUFFER_SIZE = 1024 * 1024; // 1MB buffer for reading/writing files
 
+    //function for generating the key
     public static SecretKey generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
         keyGen.init(deviceInfo.algodata);
         return keyGen.generateKey();
     }
 
+    //function for encrypting the file
     public static void encryptFile(String inputFile, String outputFile, SecretKey key) throws Exception {
         // Generate a new IV
         byte[] iv = new byte[16]; // AES block size is 16 bytes
@@ -51,7 +53,8 @@ public class encrypt {
         }
     }
 
-    public static void main(String inputFile, String encryptedFile) {
+    //main function
+    public static void mainEncryption(String inputFile, String encryptedFile) {
         try {
             // Generate or load a key
             SecretKey secretKey = generateKey();
@@ -68,6 +71,8 @@ public class encrypt {
             fw.write(inputFile+"\n");
             fw.write(encodedKey+"\n");
             fw.close();
+            app app = new app();
+            app.updateList();
         } catch (Exception e) {
             e.printStackTrace();
         }
