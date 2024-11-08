@@ -7,8 +7,8 @@ import java.awt.event.*;
 public class main implements ActionListener {
     private static JPanel signUpPanel, loginPanel;
     private static JPasswordField passField1, passField2;
-    private static JButton confirmButton1, confirmButton2, algoButton;
-    private static JLabel enterPass1, enterPass2,algorithmSelection;
+    private static JButton confirmButton1, confirmButton2;
+    private static JLabel enterPass1, enterPass2, algorithmSelection;
     private static JFrame mainFrame;
     private static JComboBox<String> algorithmComboBox;
     static String mainPath;
@@ -17,7 +17,7 @@ public class main implements ActionListener {
             //getting basic device info and specifying folderPath
             deviceInfo di = new deviceInfo();
             try {
-                di.main();
+                di.relInfo();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -102,13 +102,13 @@ public class main implements ActionListener {
 
         // Create a label for the algorithm selection
         algorithmSelection = new JLabel("Select encryption algorithm:");
-        algorithmSelection.setBounds(10, 75, 150, 30);
+        algorithmSelection.setBounds(10, 75, 175, 30);
         signUpPanel.add(algorithmSelection);
 
         // Create a JComboBox for selecting the encryption algorithm
         String[] algorithms = {"AES-192", "AES-128", "AES-256"};
         algorithmComboBox = new JComboBox<>(algorithms);
-        algorithmComboBox.setBounds(165, 75, 140, 25);
+        algorithmComboBox.setBounds(185, 75, 140, 25);
         signUpPanel.add(algorithmComboBox);
 
         confirmButton1 = new JButton("SUBMIT");
@@ -121,6 +121,7 @@ public class main implements ActionListener {
         mainFrame.setVisible(true);
     }
 
+        //handling the functionality of the buttons
         @Override
         public void actionPerformed(ActionEvent e) {
 
@@ -150,7 +151,7 @@ public class main implements ActionListener {
                         fw.write(selectedAlgorithm.substring(4,7)+"\n");
                         fw.close();
                         deviceInfo dc = new deviceInfo();
-                        dc.main();
+                        dc.relInfo();
                         mainFrame.dispose();
                         promptLogin();
                     } catch (Exception ex) {
@@ -160,6 +161,7 @@ public class main implements ActionListener {
             }
         }
 
+        //method for hashing the password upon login and storage for the first time
         public static String hash(String st) throws Exception {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(st.getBytes());
@@ -172,6 +174,8 @@ public class main implements ActionListener {
             String resultHash = sdbs.toString();
             return resultHash;
         }
+
+        //verifying the password
         public static void checkPasswordValidity() throws Exception{
             char [] passChar = passField1.getPassword();
             String passText = new String(passChar);
@@ -185,7 +189,7 @@ public class main implements ActionListener {
             if(val.equals(hashedPass)){
                 app mainApp = new app();
                 mainFrame.dispose();
-                mainApp.main();
+                mainApp.mainApp();
             }
         }
 }
