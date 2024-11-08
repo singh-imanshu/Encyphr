@@ -4,7 +4,7 @@ public class deviceInfo {
     static String systemDrive;
     static String deviceNameInfo, osInfo, fileSeperator,basePath;
     static int algodata;
-    public static void main() throws Exception{
+    public static void relInfo() throws Exception{
         deviceNameInfo = System.getProperty("user.name");
         osInfo = System.getProperty("os.name");
         fileSeperator = System.getProperty("file.seperator");
