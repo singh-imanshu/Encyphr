@@ -14,18 +14,17 @@ public class app implements ActionListener {
     private static JMenuBar appMenuBar;
     private static JList<String> passList;
     private static JScrollPane scrollPane;
-    private static JLabel label,label1;
     static ArrayList<String> fileData;
     static ArrayList<String> pathData;
     static ArrayList<String> cryptData;
     static boolean result;
     static int selectedIndex;
 
-    public static void main() throws Exception {
+    public static void mainApp() throws Exception {
         //basic outline of the JFrame
         appFrame = new JFrame("Encyphr - home");
         appPanel = new JPanel();
-        appFrame.setSize(800, 800);
+        appFrame.setSize(900, 900);
         encryptionButton = new JButton("Click here to encrypt a file ");
         encryptionButton.addActionListener(new app());
 
@@ -41,23 +40,18 @@ public class app implements ActionListener {
         appPanel.add(encryptionButton);
         appFrame.setLayout(new BorderLayout());
         encryptionButton.setBounds(150, 25, 200, 20);
-
-
-        label = new JLabel("To decrypt a file, click on it from the left menu.");
-        label.setBounds(130,400,500,25);
-        label1 = new JLabel("Please note that the list does not change in real time. I am still trying to figure it out.");
-        label1.setBounds(50,430,500,25);
         appPanel.setLayout(null);
-        appPanel.add(label);
-        appPanel.add(label1);
         appFrame.add(appPanel);
         appFrame.setResizable(false);
         appFrame.setVisible(true);
         arrayListManager();
+        jListManager();
+
+
     }
 
+    //function for populating the arrayLists
     public static void arrayListManager() throws Exception {
-
         fileData = new ArrayList<>();
         cryptData = new ArrayList<>();
         pathData = new ArrayList<>();
@@ -76,9 +70,10 @@ public class app implements ActionListener {
                 x++;
             }
         }
-        jListManager();
+        reader.close();
     }
 
+    //function for managing the list on the main app that shows the encrypted files
     public static void jListManager() throws Exception {
         //finalising list contents and position
         String[] dataArray = fileData.toArray(new String[0]);
@@ -130,6 +125,36 @@ public class app implements ActionListener {
         });
     }
 
+    //function for updating the list
+    public static void updateList() throws Exception{
+        fileData.clear();
+        cryptData.clear();
+        pathData.clear();
+
+        // Reload data from file
+        String basePath = deviceInfo.basePath;
+        BufferedReader reader = new BufferedReader(new FileReader(basePath + "\\encyphrlogs.eph"));
+        String currentLine;
+        int x = 0;
+        while ((currentLine = reader.readLine()) != null) {
+            if (x % 2 == 0) {
+                File file = new File(currentLine);
+                fileData.add(file.getName());
+                pathData.add(currentLine);
+                x++;
+            } else {
+                cryptData.add(currentLine);
+                x++;
+            }
+        }
+        reader.close();
+
+        // Update the JList
+        String[] dataArray = fileData.toArray(new String[0]);
+        passList.setListData(dataArray);
+    }
+
+    //function for handling the elements with an actionListener attached
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == encryptionButton) {
@@ -139,7 +164,7 @@ public class app implements ActionListener {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 String encryptedFilePath = file + ".encp";
                 encrypt cry = new encrypt();
-                cry.main(fileChooser.getSelectedFile().getAbsolutePath(), encryptedFilePath);
+                cry.mainEncryption(fileChooser.getSelectedFile().getAbsolutePath(), encryptedFilePath);
                 if (result){
                     fileClickedDialog = new JDialog(appFrame, "Operation Successful!", true);
                     fileClickedDialog.setLayout(new FlowLayout());
@@ -157,7 +182,7 @@ public class app implements ActionListener {
             fileClickedDialog.dispose();
             decrypt dc = new decrypt();
             try {
-                dc.main(cryptData.get(selectedIndex), pathData.get(selectedIndex) + ".encp", pathData, cryptData);
+                dc.mainDecryption(cryptData.get(selectedIndex), pathData.get(selectedIndex) + ".encp", pathData, cryptData);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
