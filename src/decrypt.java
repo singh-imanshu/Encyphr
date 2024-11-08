@@ -6,8 +6,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.*;
 
-public class decrypt {
 
+public class decrypt {
     private static final String AES_CIPHER = "AES/CBC/PKCS5Padding";
     static ArrayList<String> pathData;static ArrayList<String> cryptData;
     static Path decryptedPath;
@@ -46,7 +46,7 @@ public class decrypt {
         System.out.println("Encrypted file deleted: " + encryptedFilePath);
     }
 
-    public static void main(String key, String filePath, ArrayList pathList, ArrayList cryptList) throws Exception {
+    public static void mainDecryption(String key, String filePath, ArrayList pathList, ArrayList cryptList) throws Exception {
         pathData = pathList;
         cryptData = cryptList;
         String keyBase64 = key;
@@ -72,16 +72,18 @@ public class decrypt {
             }
         }
 
-        if (found==true) {
+        if (found) {
             String basePath = deviceInfo.basePath + "\\encyphrlogs.eph";
             fileClearing fc = new fileClearing();
-            fc.main(basePath);
+            fc.clear(basePath);
             FileWriter fw = new FileWriter(basePath);
             for (int i = 0; i < pathData.size(); i++) {
                 fw.write(pathData.get(i) + "\n");
                 fw.write(cryptData.get(i) + "\n");
             }
             fw.close();
+            app app = new app();
+            app.updateList();
         } else {
             System.out.println("Could not find matching filePath and keyB64 in lists.");
         }
