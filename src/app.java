@@ -1,16 +1,18 @@
 import java.awt.event.*;
 import java.awt.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.awt.Desktop;
+
 public class app implements ActionListener {
     private static JFrame appFrame;
     private static JPanel appPanel;
-    private static JDialog fileClickedDialog,aboutDialog;
-    private static JButton encryptionButton, decryptionButton, openButton, closeButton;
+    private static JDialog fileClickedDialog, aboutDialog;
+    private static JButton encryptionButton, decryptionButton, openButton, closeButton, openWD;
     private static JFileChooser fileChooser;
-    private static JMenu appMenu;
+    private static JMenuItem appMenu;
     private static JMenuBar appMenuBar;
     private static JList<String> passList;
     private static JScrollPane scrollPane;
@@ -21,21 +23,28 @@ public class app implements ActionListener {
     static int selectedIndex;
 
     public static void mainApp() throws Exception {
-        //basic outline of the JFrame
-        appFrame = new JFrame("Encyphr - home");
+        // basic outline of the JFrame
+        appFrame = new JFrame("Encyphr");
         appPanel = new JPanel();
         appFrame.setSize(900, 900);
         encryptionButton = new JButton("Click here to encrypt a file ");
         encryptionButton.addActionListener(new app());
 
-        //creating the menu for ABOUT
+        // creating the menu for ABOUT
         appMenuBar = new JMenuBar();
-        appMenu = new JMenu("ABOUT");
+        appMenu = new JMenuItem("ABOUT");
         appMenuBar.add(appMenu);
         appFrame.setJMenuBar(appMenuBar);
         appMenu.addActionListener(new app());
 
-        //concluding JFrame outline
+        // concluding JFrame outline
+
+        try {
+            appFrame.setIconImage(ImageIO.read(new File("encyphr_logo.png")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         appPanel.add(encryptionButton);
         appFrame.setLayout(new BorderLayout());
@@ -46,11 +55,9 @@ public class app implements ActionListener {
         appFrame.setVisible(true);
         arrayListManager();
         jListManager();
-
-
     }
 
-    //function for populating the arrayLists
+    // function for populating the arrayLists
     public static void arrayListManager() throws Exception {
         fileData = new ArrayList<>();
         cryptData = new ArrayList<>();
@@ -73,14 +80,14 @@ public class app implements ActionListener {
         reader.close();
     }
 
-    //function for managing the list on the main app that shows the encrypted files
+    // function for managing the list on the main app that shows the encrypted files
     public static void jListManager() throws Exception {
-        //finalising list contents and position
+        // finalising list contents and position
         String[] dataArray = fileData.toArray(new String[0]);
         passList = new JList<>(dataArray);
         scrollPane = new JScrollPane(passList);
         appFrame.add(scrollPane, BorderLayout.WEST);
-        //adding functionality to list elements
+        // adding functionality to list elements
         passList.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -125,8 +132,8 @@ public class app implements ActionListener {
         });
     }
 
-    //function for updating the list
-    public static void updateList() throws Exception{
+    // function for updating the list
+    public static void updateList() throws Exception {
         fileData.clear();
         cryptData.clear();
         pathData.clear();
@@ -154,7 +161,7 @@ public class app implements ActionListener {
         passList.setListData(dataArray);
     }
 
-    //function for handling the elements with an actionListener attached
+    // function for handling the elements with an actionListener attached
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == encryptionButton) {
@@ -165,7 +172,7 @@ public class app implements ActionListener {
                 String encryptedFilePath = file + ".encp";
                 encrypt cry = new encrypt();
                 cry.mainEncryption(fileChooser.getSelectedFile().getAbsolutePath(), encryptedFilePath);
-                if (result){
+                if (result) {
                     fileClickedDialog = new JDialog(appFrame, "Operation Successful!", true);
                     fileClickedDialog.setLayout(new FlowLayout());
                     closeButton = new JButton("Close");
@@ -189,9 +196,9 @@ public class app implements ActionListener {
 
             fileClickedDialog = new JDialog(appFrame, "File Decrypted Successfully!", true);
             fileClickedDialog.setLayout(new FlowLayout());
-            openButton = new JButton("Open");
-            openButton.addActionListener(new app());
-            fileClickedDialog.add(openButton);
+            openWD = new JButton("Open");
+            openWD.addActionListener(new app());
+            fileClickedDialog.add(openWD);
             fileClickedDialog.setSize(300, 300);
             fileClickedDialog.setLocationRelativeTo(appFrame);
             fileClickedDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -207,16 +214,37 @@ public class app implements ActionListener {
                 throw new RuntimeException(ex);
             }
         }
-        if(e.getSource()==appMenu){
-            aboutDialog = new JDialog(appFrame,"ABOUT",true);
-            aboutDialog.setLayout(new FlowLayout());
-            aboutDialog.setSize(300,300);
+        if (e.getSource() == appMenu) {
+            aboutDialog = new JDialog(appFrame, "ABOUT", true);
+            aboutDialog.setLayout(new BorderLayout());
+            JLabel aboutLabel = new JLabel("<html><center>Encyphr<br>Version 1.0<br><br>Developed by: Himanshu Kumar Singh<br>Email: himanshu.2508@outlook.com<br>github: github.com/astatiner</center></html>", SwingConstants.CENTER);
+            aboutLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            aboutDialog.add(aboutLabel, BorderLayout.CENTER);
+            JButton closeButton = new JButton("Close");
+            closeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    aboutDialog.dispose();
+                }
+            });
+            aboutDialog.add(closeButton, BorderLayout.SOUTH);
+            aboutDialog.setSize(400, 200);
             aboutDialog.setLocationRelativeTo(appFrame);
             aboutDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             aboutDialog.setVisible(true);
         }
-        if(e.getSource()==closeButton){
+        if (e.getSource() == closeButton) {
             fileClickedDialog.dispose();
+        }
+        if (e.getSource() == openWD) {
+            String filePath = decrypt.decryptedFilePath;
+            File file = new File(filePath);
+            try {
+                Desktop.getDesktop().open(file);
+                fileClickedDialog.dispose();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }
