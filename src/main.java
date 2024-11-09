@@ -1,6 +1,7 @@
 import java.io.*;
 import java.security.MessageDigest;
 import java.util.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -59,6 +60,13 @@ public class main implements ActionListener {
             loginPanel.add(enterPass1);
             loginPanel.add(passField1);
             mainFrame.add(loginPanel);
+
+            try {
+                mainFrame.setIconImage(ImageIO.read(new File("encyphr_logo.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
             confirmButton2.addActionListener(new main());
             mainFrame.setResizable(false);
             mainFrame.setVisible(true);
@@ -115,6 +123,12 @@ public class main implements ActionListener {
         confirmButton1.setBounds(10, 110, 100, 25);
         confirmButton1.addActionListener(new main());
         signUpPanel.add(confirmButton1);
+
+        try {
+            mainFrame.setIconImage(ImageIO.read(new File("encyphr_logo.png")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         mainFrame.add(signUpPanel);
         mainFrame.setResizable(false);
