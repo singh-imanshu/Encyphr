@@ -217,7 +217,7 @@ public class app implements ActionListener {
         if (e.getSource() == appMenu) {
             aboutDialog = new JDialog(appFrame, "ABOUT", true);
             aboutDialog.setLayout(new BorderLayout());
-            JLabel aboutLabel = new JLabel("<html><center>Encyphr<br>Version 1.0<br><br>Developed by: Himanshu Kumar Singh<br>Email: himanshu.2508@outlook.com<br>github: github.com/astatiner</center></html>", SwingConstants.CENTER);
+            JLabel aboutLabel = new JLabel("<html><center>Encyphr<br>Version 1.0<br><br>Developed by: Himanshu Kumar Singh<br>Email: himanshu.2508@outlook.com<br>github: github.com/singh-imanshu</center></html>", SwingConstants.CENTER);
             aboutLabel.setFont(new Font("Arial", Font.BOLD, 14));
             aboutDialog.add(aboutLabel, BorderLayout.CENTER);
             JButton closeButton = new JButton("Close");
